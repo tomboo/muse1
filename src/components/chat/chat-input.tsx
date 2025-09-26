@@ -1,8 +1,12 @@
 'use client';
 
+import { useState, useTransition, FormEvent, ChangeEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { Send, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { startNewConversation, sendMessage } from '@/app/chat/actions';
+import { useToast } from '@/hooks/use-toast';
 
 function SubmitButton({ isLoading }: { isLoading: boolean }) {
   return (
@@ -13,13 +17,52 @@ function SubmitButton({ isLoading }: { isLoading: boolean }) {
 }
 
 interface ChatInputProps {
-  input: string;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isLoading: boolean;
+  conversationId: string | null;
 }
 
-export function ChatInput({ input, handleSubmit, handleInputChange, isLoading }: ChatInputProps) {
+export function ChatInput({ conversationId }: ChatInputProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const [input, setInput] = useState('');
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const messageContent = input.trim();
+    if (!messageContent) return;
+
+    setInput('');
+
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.append('message', messageContent);
+
+      let result;
+      if (conversationId) {
+        result = await sendMessage(conversationId, formData);
+      } else {
+        result = await startNewConversation(formData);
+      }
+
+      if (result?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: result.error,
+        });
+      } else if (result?.newConversationId) {
+        router.push(`/chat/${result.newConversationId}`);
+        router.refresh();
+      } else {
+        router.refresh();
+      }
+    });
+  };
+
   return (
     <div className="bg-card border-t p-4 md:p-6">
       <div className="container mx-auto max-w-3xl">
@@ -34,9 +77,9 @@ export function ChatInput({ input, handleSubmit, handleInputChange, isLoading }:
             placeholder="Type your message..."
             className="flex-1"
             autoComplete="off"
-            disabled={isLoading}
+            disabled={isPending}
           />
-          <SubmitButton isLoading={isLoading} />
+          <SubmitButton isLoading={isPending} />
         </form>
       </div>
     </div>

@@ -57,7 +57,9 @@ export function useChat({ initialMessages, conversationId }: UseChatOptions) {
           description: result.error,
         });
       } else if (result?.newConversationId) {
-        router.push(`/chat/${result.newConversationId}`);
+        // This navigation is now handled in the ChatInput component directly
+        // to simplify the hook's responsibilities.
+        // router.push(`/chat/${result.newConversationId}`);
         router.refresh();
       } else {
         router.refresh();
