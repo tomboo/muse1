@@ -7,11 +7,13 @@ import { getConversations } from '@/lib/store';
 import type { Conversation } from '@/lib/types';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageSquarePlus } from 'lucide-react';
+import { Bot, MessageSquarePlus, User, Building } from 'lucide-react';
 import { ConversationActions } from '@/components/chat/conversation-actions';
 import { Suspense } from 'react';
 import { ClearConversations } from '@/components/chat/clear-conversations';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { startChat } from '@/app/conversations/actions';
+
 
 export const metadata: Metadata = {
   title: 'Muse1',
@@ -48,12 +50,12 @@ export default async function RootLayout({
           <div className="flex flex-1">
             <Sidebar className="md:flex flex-col hidden">
               <SidebarHeader>
-                <Button asChild variant="ghost" className="w-full justify-start">
-                  <Link href="/chat">
+                <form action={startChat} className='w-full'>
+                  <Button type="submit" variant="ghost" className="w-full justify-start">
                     <MessageSquarePlus />
                     <span>New Chat</span>
-                  </Link>
-                </Button>
+                  </Button>
+                </form>
               </SidebarHeader>
               <SidebarContent className="p-2">
                 <SidebarMenu>
@@ -75,15 +77,25 @@ export default async function RootLayout({
               </SidebarContent>
               <SidebarFooter>
                 <SidebarMenu>
-                  <SidebarMenuItem>
+                   <SidebarMenuItem>
                     <ClearConversations />
+                  </SidebarMenuItem>
+                   <SidebarMenuItem>
+                     <Button asChild variant="ghost" className="w-full justify-start">
+                        <Link href="/admin">
+                          <Building />
+                          <span>Admin</span>
+                        </Link>
+                     </Button>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <div className="flex items-center gap-3 px-2 py-1">
                       <Avatar className="h-8 w-8">
-                        <AvatarFallback>N</AvatarFallback>
+                        <AvatarFallback>
+                          <User />
+                        </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm font-medium">Name</span>
+                      <span className="text-sm font-medium">User</span>
                     </div>
                   </SidebarMenuItem>
                 </SidebarMenu>

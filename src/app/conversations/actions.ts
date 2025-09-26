@@ -3,7 +3,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { deleteConversation as deleteConversationFromStore, renameConversation as renameConversationInStore, clearAllConversations as clearAllConversationsFromStore } from '@/lib/store';
+import { deleteConversation as deleteConversationFromStore, renameConversation as renameConversationInStore, clearAllConversations as clearAllConversationsFromStore, createConversation } from '@/lib/store';
+
+export async function startChat() {
+  const newConversation = createConversation();
+  redirect(`/chat/${newConversation.id}`);
+}
 
 export async function renameConversation(conversationId: string, newTitle: string) {
   if (!newTitle.trim()) {
@@ -34,8 +39,8 @@ export async function deleteConversation(conversationId: string, currentPath: st
 
   // If the user is currently on the page of the conversation they are deleting,
   // redirect them to the home page.
-  if (currentPath.startsWith(`/chat/`)) {
-    redirect('/');
+  if (currentPath.startsWith(`/chat/${conversationId}`)) {
+    redirect('/chat');
   }
 }
 
@@ -48,5 +53,5 @@ export async function clearAllConversations() {
     console.error('Error clearing conversations:', error);
     return { error: 'Failed to clear conversations.' };
   }
-  redirect('/');
+  redirect('/chat');
 }
