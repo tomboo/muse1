@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useChat } from '@/hooks/use-chat';
 import type { Message } from '@/lib/types';
 import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
@@ -14,18 +14,20 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ conversationId, initialMessages }: ChatInterfaceProps) {
-  // Rehydrate the messages with Date objects on the client
-  const messages = useMemo(() => {
-    return initialMessages.map(msg => ({
-      ...msg,
-      timestamp: new Date(msg.timestamp),
-    }));
-  }, [initialMessages]);
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    initialMessages,
+    conversationId,
+  });
 
   return (
     <div className="flex flex-col h-full">
       <ChatMessages messages={messages} />
-      <ChatInput conversationId={conversationId} />
+      <ChatInput
+        handleSubmit={handleSubmit}
+        handleInputChange={handleInputChange}
+        input={input}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
