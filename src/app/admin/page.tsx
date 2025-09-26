@@ -6,6 +6,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // This is a type used for serialization to the client.
 type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
@@ -88,7 +90,15 @@ export default async function AdminPage({ searchParams }: { searchParams: { conv
                           {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
                         </p>
                       </div>
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      {message.role === 'assistant' ? (
+                        <article className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {message.content}
+                          </ReactMarkdown>
+                        </article>
+                      ) : (
+                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      )}
                     </div>
                   ))
                 ) : (
