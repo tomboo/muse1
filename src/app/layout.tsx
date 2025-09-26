@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import Link from 'next/link';
 import { getConversations } from '@/lib/store';
 import type { Conversation } from '@/lib/types';
-import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
+import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageSquarePlus } from 'lucide-react';
+import { Bot, MessageSquarePlus, Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Muse1',
@@ -64,6 +64,18 @@ export default async function RootLayout({
                   ))}
                 </SidebarMenu>
               </SidebarContent>
+              <SidebarFooter>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild variant="ghost" className="w-full justify-start">
+                      <Link href="/admin">
+                        <Shield />
+                        <span>Admin</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarFooter>
             </Sidebar>
             <div className="flex flex-col flex-1">
               <header className="border-b bg-card md:hidden">
