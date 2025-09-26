@@ -70,6 +70,13 @@ export function deleteConversation(id: string): boolean {
   return false;
 }
 
+export function clearAllConversations(): void {
+  conversations.length = 0;
+  for (const key in messages) {
+    delete messages[key];
+  }
+}
+
 export function getMessages(conversationId: string): Message[] {
   return messages[conversationId] || [];
 }

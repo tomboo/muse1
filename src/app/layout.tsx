@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Bot, MessageSquarePlus, Shield } from 'lucide-react';
 import { ConversationActions } from '@/components/chat/conversation-actions';
 import { Suspense } from 'react';
+import { ClearConversations } from '@/components/chat/clear-conversations';
 
 export const metadata: Metadata = {
   title: 'Muse1',
@@ -73,6 +74,9 @@ export default async function RootLayout({
               </SidebarContent>
               <SidebarFooter>
                 <SidebarMenu>
+                  <SidebarMenuItem>
+                    <ClearConversations />
+                  </SidebarMenuItem>
                   <SidebarMenuItem>
                     <Button asChild variant="ghost" className="w-full justify-start">
                       <Link href="/admin">
