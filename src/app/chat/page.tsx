@@ -11,7 +11,7 @@ export default async function NewChatPage() {
     redirect(`/chat/${newConversation.id}`);
   } catch (error) {
     console.error("Error creating new conversation:", error);
-    // Redirect to home page to allow user to try again.
+    // If conversation creation fails, redirect to a safe page (e.g., home) to prevent a loop.
     redirect('/');
   }
 }
