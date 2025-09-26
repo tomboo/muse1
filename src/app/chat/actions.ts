@@ -4,7 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { addMessage as addMessageToStore, createConversation } from '@/lib/store';
 import type { Message } from '@/lib/types';
 import { chat } from '@/ai/flows/chat-flow';
-import { redirect } from 'next/navigation';
 
 export async function sendMessage(conversationId: string | null, prevState: any, formData: FormData) {
   const content = formData.get('message') as string;
@@ -14,6 +13,7 @@ export async function sendMessage(conversationId: string | null, prevState: any,
   }
 
   let newConversationId = conversationId;
+  let isNewConversation = false;
 
   try {
     // If there's no conversationId, it means this is the first message.
@@ -21,6 +21,7 @@ export async function sendMessage(conversationId: string | null, prevState: any,
     if (!newConversationId) {
       const newConversation = createConversation();
       newConversationId = newConversation.id;
+      isNewConversation = true;
     }
 
     const userMessage: Omit<Message, 'id' | 'timestamp'> = {
@@ -39,9 +40,8 @@ export async function sendMessage(conversationId: string | null, prevState: any,
     revalidatePath(`/chat/${newConversationId}`);
     revalidatePath('/admin');
     
-    // If we created a new conversation, we need to redirect to its new URL.
-    if (!conversationId) {
-       redirect(`/chat/${newConversationId}`);
+    if (isNewConversation) {
+      return { success: true, newConversationId: newConversationId };
     }
 
     return { success: true };

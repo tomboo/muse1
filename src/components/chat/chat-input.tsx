@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ function SubmitButton() {
 export function ChatInput({ conversationId }: { conversationId: string | null }) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
   const [state, formAction] = useActionState(sendMessage.bind(null, conversationId), null);
   const { toast } = useToast();
 
@@ -27,6 +29,9 @@ export function ChatInput({ conversationId }: { conversationId: string | null })
     if (state?.success) {
       formRef.current?.reset();
       inputRef.current?.focus();
+      if (state.newConversationId) {
+        router.push(`/chat/${state.newConversationId}`);
+      }
     }
     if (state?.error) {
       toast({
@@ -35,7 +40,7 @@ export function ChatInput({ conversationId }: { conversationId: string | null })
         description: state.error,
       });
     }
-  }, [state, toast]);
+  }, [state, toast, router]);
 
   return (
     <div className="bg-card border-t p-4 md:p-6">
