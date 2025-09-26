@@ -1,12 +1,32 @@
 import type { Conversation, Message } from './types';
 
-let conversations: Conversation[] = [];
-let messages: { [conversationId: string]: Message[] } = {};
-let idCounter = 0;
+// In a real app, you'd use a database.
+// For this starter, we'll use a simple in-memory store.
+// We use the global object to persist the data across hot reloads in development.
+declare global {
+  var __conversations: Conversation[] | undefined;
+  var __messages: { [conversationId: string]: Message[] } | undefined;
+  var __idCounter: number | undefined;
+}
+
+if (global.__conversations === undefined) {
+  global.__conversations = [];
+}
+if (global.__messages === undefined) {
+  global.__messages = {};
+}
+if (global.__idCounter === undefined) {
+  global.__idCounter = 0;
+}
+
+
+const conversations: Conversation[] = global.__conversations;
+const messages: { [conversationId: string]: Message[] } = global.__messages;
+
 
 function generateId(): string {
-  idCounter++;
-  return idCounter.toString();
+  global.__idCounter!++;
+  return global.__idCounter.toString();
 }
 
 export function getConversations(): Conversation[] {
