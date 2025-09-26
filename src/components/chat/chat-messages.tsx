@@ -3,8 +3,7 @@
 import { useEffect, useRef } from 'react';
 import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Bot, User } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -41,11 +40,9 @@ export function ChatMessages({ messages }: { messages: Message[] }) {
             )}
           >
             {message.role === 'assistant' && (
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary text-primary-foreground">
-                  <Bot className="h-5 w-5" />
-                </AvatarFallback>
-              </Avatar>
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Bot className="h-5 w-5" />
+              </div>
             )}
             <div
               className={cn(
@@ -66,11 +63,9 @@ export function ChatMessages({ messages }: { messages: Message[] }) {
               )}
             </div>
             {message.role === 'user' && (
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-accent text-accent-foreground">
-                  <User className="h-5 w-5" />
-                </AvatarFallback>
-              </Avatar>
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                <div className="h-5 w-5" />
+              </div>
             )}
           </div>
         ))}

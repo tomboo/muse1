@@ -6,7 +6,6 @@ import { SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { ConversationActions } from '@/components/chat/conversation-actions';
 import type { Conversation } from '@/lib/types';
-import { cn } from '@/lib/utils';
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -25,10 +24,8 @@ export function ConversationList({ conversations }: ConversationListProps) {
               <Button
                 asChild
                 variant="ghost"
-                className={cn(
-                  "w-full justify-start flex-1 overflow-hidden",
-                  isActive && "bg-accent text-accent-foreground"
-                )}
+                className="w-full justify-start flex-1 overflow-hidden"
+                data-active={isActive}
               >
                 <Link href={`/chat/${convo.id}`} className="truncate">
                   {convo.title}
