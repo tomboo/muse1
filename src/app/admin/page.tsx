@@ -34,9 +34,11 @@ async function getSafeMessages(conversationId: string): Promise<SafeMessage[]> {
 
 
 export default async function AdminPage({ searchParams }: { searchParams: { conversationId?: string } }) {
-  const conversations = await getSafeConversations();
   const selectedConversationId = searchParams.conversationId;
-  const messages = await getSafeMessages(selectedConversationId || '');
+  const [conversations, messages] = await Promise.all([
+    getSafeConversations(),
+    getSafeMessages(selectedConversationId || '')
+  ]);
   const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
   return (
