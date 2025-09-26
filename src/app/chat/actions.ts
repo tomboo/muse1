@@ -1,49 +1,71 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { addMessage as addMessageToStore, createConversation } from '@/lib/store';
 import type { Message } from '@/lib/types';
 import { chat } from '@/ai/flows/chat-flow';
 
-export async function sendMessage(conversationId: string | null, prevState: any, formData: FormData) {
+/**
+ * Starts a new conversation with the user's first message.
+ */
+export async function startNewConversation(prevState: any, formData: FormData) {
   const content = formData.get('message') as string;
-  
   if (!content?.trim()) {
     return { error: 'Message cannot be empty.' };
   }
 
-  let newConversationId = conversationId;
-  let isNewConversation = false;
-
   try {
-    // If there's no conversationId, it means this is the first message.
-    // We need to create a new conversation.
-    if (!newConversationId) {
-      const newConversation = createConversation();
-      newConversationId = newConversation.id;
-      isNewConversation = true;
-    }
+    const newConversation = createConversation();
+    const newConversationId = newConversation.id;
 
-    const userMessage: Omit<Message, 'id' | 'timestamp'> = {
-      role: 'user',
-      content: content.trim(),
-    };
-    
-    // Add the user's message to the store.
-    addMessageToStore(newConversationId, userMessage.content, userMessage.role);
+    // Add user message
+    addMessageToStore(newConversationId, content.trim(), 'user');
 
-    // Get the assistant's response.
-    const assistantResponse = await chat(userMessage.content);
-    addMessageToStore(newConversationId, assistantResponse, 'assistant');
+    // Get assistant response
+    const assistantResponse = await chat(content.trim());
+    addMessageTo-store(newConversationId, assistantResponse, 'assistant');
 
+    // Revalidate paths
     revalidatePath('/');
     revalidatePath(`/chat/${newConversationId}`);
     revalidatePath('/admin');
     
-    if (isNewConversation) {
-      return { success: true, newConversationId: newConversationId };
-    }
+    // Return the new ID so the client can redirect
+    return { success: true, newConversationId: newConversationId };
 
+  } catch (error) {
+    console.error('Error creating new conversation:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to start conversation.';
+    return { error: errorMessage };
+  }
+}
+
+/**
+ * Sends a message to an existing conversation.
+ */
+export async function sendMessage(conversationId: string, prevState: any, formData: FormData) {
+  const content = formData.get('message') as string;
+  if (!content?.trim()) {
+    return { error: 'Message cannot be empty.' };
+  }
+  if (!conversationId) {
+    return { error: 'Conversation ID is missing.' };
+  }
+
+  try {
+    // Add user message
+    addMessageToStore(conversationId, content.trim(), 'user');
+
+    // Get assistant response
+    const assistantResponse = await chat(content.trim());
+    addMessageToStore(conversationId, assistantResponse, 'assistant');
+
+    // Revalidate paths
+    revalidatePath('/');
+    revalidatePath(`/chat/${conversationId}`);
+    revalidatePath('/admin');
+    
     return { success: true };
 
   } catch (error) {

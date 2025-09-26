@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { sendMessage } from '@/app/chat/actions';
+import { sendMessage, startNewConversation } from '@/app/chat/actions';
 import { useToast } from '@/hooks/use-toast';
 
 function SubmitButton() {
@@ -22,16 +22,25 @@ export function ChatInput({ conversationId }: { conversationId: string | null })
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const [state, formAction] = useActionState(sendMessage.bind(null, conversationId), null);
   const { toast } = useToast();
 
+  // Determine which action to use based on whether it's a new chat or an existing one.
+  const action = conversationId ? sendMessage.bind(null, conversationId) : startNewConversation;
+  const [state, formAction] = useActionState(action, null);
+  
+  useEffect(() => {
+    // For new conversations, the server action returns the new conversation ID.
+    // We then use the router to navigate to the new chat page.
+    if (state?.success && state.newConversationId) {
+      router.push(`/chat/${state.newConversationId}`);
+    }
+  }, [state, router]);
+  
+  // This effect handles resetting the form and showing toast notifications.
   useEffect(() => {
     if (state?.success) {
       formRef.current?.reset();
       inputRef.current?.focus();
-      if (state.newConversationId) {
-        router.push(`/chat/${state.newConversationId}`);
-      }
     }
     if (state?.error) {
       toast({
@@ -40,7 +49,7 @@ export function ChatInput({ conversationId }: { conversationId: string | null })
         description: state.error,
       });
     }
-  }, [state, toast, router]);
+  }, [state, toast]);
 
   return (
     <div className="bg-card border-t p-4 md:p-6">
