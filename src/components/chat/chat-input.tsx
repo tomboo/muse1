@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useRef, useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ function SubmitButton() {
 export function ChatInput({ conversationId }: { conversationId: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [state, formAction] = useFormState(addMessage.bind(null, conversationId), null);
+  const [state, formAction] = useActionState(addMessage.bind(null, conversationId), null);
   const { toast } = useToast();
 
   useEffect(() => {
