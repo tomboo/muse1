@@ -10,13 +10,14 @@ declare global {
 }
 
 if (global.__conversations === undefined) {
-  global.__conversations = [];
+  const initialConversations: Conversation[] = [];
+  global.__conversations = initialConversations;
 }
 if (global.__messages === undefined) {
   global.__messages = {};
 }
 if (global.__idCounter === undefined) {
-  global.__idCounter = 0;
+  global.__idCounter = global.__conversations.length;
 }
 
 
@@ -47,6 +48,26 @@ export function createConversation(title: string): Conversation {
   conversations.push(newConversation);
   messages[newConversation.id] = [];
   return newConversation;
+}
+
+export function renameConversation(id: string, newTitle: string): Conversation | undefined {
+  const conversation = getConversation(id);
+  if (conversation) {
+    conversation.title = newTitle;
+    conversation.updatedAt = new Date();
+    return conversation;
+  }
+  return undefined;
+}
+
+export function deleteConversation(id: string): boolean {
+  const index = conversations.findIndex(c => c.id === id);
+  if (index !== -1) {
+    conversations.splice(index, 1);
+    delete messages[id];
+    return true;
+  }
+  return false;
 }
 
 export function getMessages(conversationId: string): Message[] {

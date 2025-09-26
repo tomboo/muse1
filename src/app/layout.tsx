@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils";
 import Link from 'next/link';
 import { getConversations } from '@/lib/store';
 import type { Conversation } from '@/lib/types';
-import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
+import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Bot, MessageSquarePlus, Shield } from 'lucide-react';
+import { ConversationActions } from '@/components/chat/conversation-actions';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Muse1',
@@ -53,26 +55,31 @@ export default async function RootLayout({
               </SidebarHeader>
               <SidebarContent className="p-2">
                 <SidebarMenu>
-                  {conversations.map(convo => (
-                    <SidebarMenuItem key={convo.id}>
-                      <SidebarMenuButton asChild variant="ghost" className="w-full justify-start">
-                        <Link href={`/chat/${convo.id}`}>
-                          {convo.title}
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                  <Suspense fallback={<>Loading...</>}>
+                    {conversations.map(convo => (
+                      <SidebarMenuItem key={convo.id}>
+                        <div className="flex items-center justify-between w-full">
+                           <Button asChild variant="ghost" className="w-full justify-start flex-1 overflow-hidden">
+                              <Link href={`/chat/${convo.id}`} className="truncate">
+                                {convo.title}
+                              </Link>
+                           </Button>
+                           <ConversationActions conversation={convo} />
+                        </div>
+                      </SidebarMenuItem>
+                    ))}
+                  </Suspense>
                 </SidebarMenu>
               </SidebarContent>
               <SidebarFooter>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild variant="ghost" className="w-full justify-start">
+                    <Button asChild variant="ghost" className="w-full justify-start">
                       <Link href="/admin">
                         <Shield />
                         <span>Admin</span>
                       </Link>
-                    </SidebarMenuButton>
+                    </Button>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarFooter>
