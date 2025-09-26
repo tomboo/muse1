@@ -7,10 +7,11 @@ import { getConversations } from '@/lib/store';
 import type { Conversation } from '@/lib/types';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageSquarePlus, Shield } from 'lucide-react';
+import { Bot, MessageSquarePlus } from 'lucide-react';
 import { ConversationActions } from '@/components/chat/conversation-actions';
 import { Suspense } from 'react';
 import { ClearConversations } from '@/components/chat/clear-conversations';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 export const metadata: Metadata = {
   title: 'Muse1',
@@ -78,12 +79,12 @@ export default async function RootLayout({
                     <ClearConversations />
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <Button asChild variant="ghost" className="w-full justify-start">
-                      <Link href="/admin">
-                        <Shield />
-                        <span>Admin</span>
-                      </Link>
-                    </Button>
+                    <div className="flex items-center gap-3 px-2 py-1">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>N</AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium">Name</span>
+                    </div>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarFooter>
