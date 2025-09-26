@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import type { Message } from '@/lib/types';
 import { Bot } from 'lucide-react';
 import { MemoizedChatMessage } from './chat-message';
+import { config } from '@/lib/config';
 
 export function ChatMessages({ messages }: { messages: Message[] }) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -19,7 +20,7 @@ export function ChatMessages({ messages }: { messages: Message[] }) {
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
           <Bot className="mx-auto h-12 w-12 text-muted-foreground" />
-          <h2 className="mt-4 text-2xl font-bold">Welcome to Muse1</h2>
+          <h2 className="mt-4 text-2xl font-bold">Welcome to {config.appName}</h2>
           <p className="mt-2 text-muted-foreground">Start the conversation by typing a message below.</p>
         </div>
       </div>

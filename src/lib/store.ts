@@ -1,4 +1,5 @@
 import type { Conversation, Message } from './types';
+import { config } from './config';
 
 // In a real app, you'd use a database.
 // For this starter, we'll use a simple in-memory store.
@@ -41,8 +42,8 @@ export function getConversation(id: string): Conversation | undefined {
 export function createConversation(title?: string): Conversation {
   let newTitle = title;
   if (!newTitle) {
-    const newChatCount = conversations.filter(c => c.title.startsWith('New Chat')).length + 1;
-    newTitle = `New Chat ${newChatCount}`;
+    const newChatCount = conversations.filter(c => c.title.startsWith(config.newChatName)).length + 1;
+    newTitle = `${config.newChatName} ${newChatCount}`;
   }
 
   const newConversation: Conversation = {
@@ -105,6 +106,13 @@ export function addMessage(conversationId: string, content: string, role: 'user'
   }
   messages[conversationId].push(newMessage);
 
+  // Update the conversation's updatedAt timestamp
+  const firstMessage = messages[conversationId].length === 1;
+  // If it's the first message, update the title based on the content
+  if (firstMessage && role === 'user') {
+    const newTitle = content.substring(0, 30);
+    conversation.title = newTitle.length < 30 ? newTitle : `${newTitle}...`;
+  }
   conversation.updatedAt = new Date();
 
   return newMessage;

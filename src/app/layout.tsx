@@ -13,10 +13,11 @@ import { Suspense } from 'react';
 import { ClearConversations } from '@/components/chat/clear-conversations';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { startChat } from '@/app/conversations/actions';
+import { config } from '@/lib/config';
 
 
 export const metadata: Metadata = {
-  title: 'Muse1',
+  title: config.appName,
   description: 'A modern, contemporary, minimalist web app.',
 };
 
@@ -93,7 +94,7 @@ export default async function RootLayout({
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
                   <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
                     <Bot className="h-6 w-6" />
-                    <span className="font-headline">Muse1</span>
+                    <span className="font-headline">{config.appName}</span>
                   </Link>
                   <SidebarTrigger />
                 </div>
