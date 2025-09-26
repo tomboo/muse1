@@ -8,7 +8,7 @@ import type { Conversation } from '@/lib/types';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Bot, MessageSquarePlus, User, Building } from 'lucide-react';
-import { ConversationActions } from '@/components/chat/conversation-actions';
+import { ConversationList } from '@/components/chat/conversation-list';
 import { Suspense } from 'react';
 import { ClearConversations } from '@/components/chat/clear-conversations';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -60,18 +60,7 @@ export default async function RootLayout({
               <SidebarContent className="p-2">
                 <SidebarMenu>
                   <Suspense fallback={<>Loading...</>}>
-                    {conversations.map(convo => (
-                      <SidebarMenuItem key={convo.id}>
-                        <div className="flex items-center justify-between w-full">
-                           <Button asChild variant="ghost" className="w-full justify-start flex-1 overflow-hidden">
-                              <Link href={`/chat/${convo.id}`} className="truncate">
-                                {convo.title}
-                              </Link>
-                           </Button>
-                           <ConversationActions conversation={convo} />
-                        </div>
-                      </SidebarMenuItem>
-                    ))}
+                    <ConversationList conversations={conversations} />
                   </Suspense>
                 </SidebarMenu>
               </SidebarContent>
