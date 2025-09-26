@@ -17,7 +17,12 @@ export async function addMessage(conversationId: string, prevState: any, formDat
   };
 
   try {
+    // Add the user's message
     addMessageToStore(conversationId, userMessage.content, userMessage.role);
+
+    // Simulate an assistant response
+    const assistantResponse = `You said: ${userMessage.content}`;
+    addMessageToStore(conversationId, assistantResponse, 'assistant');
     
     revalidatePath(`/chat/${conversationId}`);
     revalidatePath('/admin');
