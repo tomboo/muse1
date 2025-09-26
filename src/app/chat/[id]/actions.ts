@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { addMessage as addMessageToStore } from '@/lib/store';
 import type { Message } from '@/lib/types';
+import { chat } from '@/ai/flows/chat-flow';
 
 export async function addMessage(conversationId: string, prevState: any, formData: FormData) {
   const content = formData.get('message') as string;
@@ -20,8 +21,8 @@ export async function addMessage(conversationId: string, prevState: any, formDat
     // Add the user's message
     addMessageToStore(conversationId, userMessage.content, userMessage.role);
 
-    // Simulate an assistant response
-    const assistantResponse = `You said: ${userMessage.content}`;
+    // Get the assistant's response
+    const assistantResponse = await chat(userMessage.content);
     addMessageToStore(conversationId, assistantResponse, 'assistant');
     
     revalidatePath(`/chat/${conversationId}`);
