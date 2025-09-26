@@ -1,19 +1,14 @@
+'use server';
+
 import { redirect } from 'next/navigation';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { createConversation } from '@/lib/store';
 
 // This is an Action, but as a Server Component it can run server-side code before rendering.
 // We use this to create a new chat and redirect.
 export default async function NewChatPage() {
-  const newConversation = {
-    title: 'New Conversation',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
   try {
-    const docRef = await addDoc(collection(db, 'conversations'), newConversation);
-    redirect(`/chat/${docRef.id}`);
+    const newConversation = createConversation('New Conversation');
+    redirect(`/chat/${newConversation.id}`);
   } catch (error) {
     console.error("Error creating new conversation:", error);
     // Redirect to home page to allow user to try again.

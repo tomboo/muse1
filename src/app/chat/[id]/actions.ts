@@ -1,8 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { addMessage as addMessageToStore } from '@/lib/store';
 import type { Message } from '@/lib/types';
 
 export async function addMessage(conversationId: string, prevState: any, formData: FormData) {
@@ -18,16 +17,7 @@ export async function addMessage(conversationId: string, prevState: any, formDat
   };
 
   try {
-    const messagesRef = collection(db, 'conversations', conversationId, 'messages');
-    await addDoc(messagesRef, {
-      ...userMessage,
-      timestamp: new Date(),
-    });
-
-    const conversationRef = doc(db, 'conversations', conversationId);
-    await updateDoc(conversationRef, {
-      updatedAt: new Date(),
-    });
+    addMessageToStore(conversationId, userMessage.content, userMessage.role);
     
     revalidatePath(`/chat/${conversationId}`);
     revalidatePath('/admin');
@@ -35,6 +25,7 @@ export async function addMessage(conversationId: string, prevState: any, formDat
 
   } catch (error) {
     console.error('Error adding message:', error);
-    return { error: 'Failed to send message.' };
+    const errorMessage = error instanceof Error ? error.message : 'Failed to send message.';
+    return { error: errorMessage };
   }
 }

@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { collection, query, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getConversations, getMessages } from '@/lib/store';
 import type { Conversation, Message } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,42 +12,29 @@ type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
 type SafeConversation = Omit<Conversation, 'createdAt' | 'updatedAt'> & { createdAt: string; updatedAt: string };
 
 
-async function getConversations(): Promise<SafeConversation[]> {
-  const conversationsRef = collection(db, 'conversations');
-  const q = query(conversationsRef, orderBy('updatedAt', 'desc'));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      title: data.title,
-      createdAt: (data.createdAt.toDate() as Date).toISOString(),
-      updatedAt: (data.updatedAt.toDate() as Date).toISOString(),
-    };
-  });
+async function getSafeConversations(): Promise<SafeConversation[]> {
+  const conversations = getConversations();
+  return conversations.map(convo => ({
+    ...convo,
+    createdAt: convo.createdAt.toISOString(),
+    updatedAt: convo.updatedAt.toISOString(),
+  }));
 }
 
-async function getMessages(conversationId: string): Promise<SafeMessage[]> {
+async function getSafeMessages(conversationId: string): Promise<SafeMessage[]> {
   if (!conversationId) return [];
-  const messagesRef = collection(db, 'conversations', conversationId, 'messages');
-  const q = query(messagesRef, orderBy('timestamp', 'asc'));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => {
-     const data = doc.data();
-     return {
-      id: doc.id,
-      role: data.role,
-      content: data.content,
-      timestamp: (data.timestamp.toDate() as Date).toISOString(),
-    };
-  });
+  const messages = getMessages(conversationId);
+  return messages.map(message => ({
+     ...message,
+     timestamp: message.timestamp.toISOString(),
+  }));
 }
 
 
 export default async function AdminPage({ searchParams }: { searchParams: { conversationId?: string } }) {
-  const conversations = await getConversations();
+  const conversations = await getSafeConversations();
   const selectedConversationId = searchParams.conversationId;
-  const messages = await getMessages(selectedConversationId || '');
+  const messages = await getSafeMessages(selectedConversationId || '');
   const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
   return (
