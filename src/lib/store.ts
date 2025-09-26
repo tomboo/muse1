@@ -38,10 +38,16 @@ export function getConversation(id: string): Conversation | undefined {
   return conversations.find(c => c.id === id);
 }
 
-export function createConversation(title: string): Conversation {
+export function createConversation(title?: string): Conversation {
+  let newTitle = title;
+  if (!newTitle) {
+    const newChatCount = conversations.filter(c => c.title.startsWith('New Chat')).length + 1;
+    newTitle = `New Chat ${newChatCount}`;
+  }
+
   const newConversation: Conversation = {
     id: generateId(),
-    title,
+    title: newTitle,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
