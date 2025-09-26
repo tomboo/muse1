@@ -6,12 +6,15 @@ import { createConversation } from '@/lib/store';
 // This is an Action, but as a Server Component it can run server-side code before rendering.
 // We use this to create a new chat and redirect.
 export default async function NewChatPage() {
+  let newConversation;
   try {
-    const newConversation = createConversation('New Conversation');
-    redirect(`/chat/${newConversation.id}`);
+    newConversation = createConversation('New Conversation');
   } catch (error) {
     console.error("Error creating new conversation:", error);
-    // If conversation creation fails, redirect to a safe page (e.g., /admin) to prevent a loop.
+    // If conversation creation fails, redirect to a safe page to prevent a loop.
     redirect('/admin');
   }
+
+  // The redirect must happen outside of the try...catch block.
+  redirect(`/chat/${newConversation.id}`);
 }
