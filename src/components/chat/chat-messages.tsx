@@ -5,6 +5,8 @@ import type { Message } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Bot, User } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export function ChatMessages({ messages }: { messages: Message[] }) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -47,13 +49,21 @@ export function ChatMessages({ messages }: { messages: Message[] }) {
             )}
             <div
               className={cn(
-                'max-w-md rounded-lg p-3 text-sm shadow-sm',
+                'max-w-prose rounded-lg p-3 text-sm shadow-sm',
                 message.role === 'user'
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-card border'
               )}
             >
-              <p className="whitespace-pre-wrap">{message.content}</p>
+              {message.role === 'assistant' ? (
+                 <article className="prose prose-sm dark:prose-invert max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {message.content}
+                  </ReactMarkdown>
+                </article>
+              ) : (
+                <p className="whitespace-pre-wrap">{message.content}</p>
+              )}
             </div>
             {message.role === 'user' && (
               <Avatar className="h-8 w-8">
