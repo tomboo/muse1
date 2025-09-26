@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getConversations, getMessages } from '@/lib/store';
-import type { Conversation, Message } from '@/lib/types';
+import type { SafeConversation, SafeMessage } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -8,11 +8,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
-// This is a type used for serialization to the client.
-type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
-type SafeConversation = Omit<Conversation, 'createdAt' | 'updatedAt'> & { createdAt: string; updatedAt: string };
-
 
 async function getSafeConversations(): Promise<SafeConversation[]> {
   const conversations = getConversations();

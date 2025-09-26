@@ -1,12 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import type { Message } from '@/lib/types';
+import type { Message, SafeMessage } from '@/lib/types';
 import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
-
-// The message type coming from the server has a string timestamp
-type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
 
 interface ChatInterfaceProps {
   conversationId: string | null;
@@ -14,7 +11,7 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ conversationId, initialMessages }: ChatInterfaceProps) {
-  const messages = useMemo(() => {
+  const messages: Message[] = useMemo(() => {
     return initialMessages.map(msg => ({
       ...msg,
       timestamp: new Date(msg.timestamp),

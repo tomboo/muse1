@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import Link from 'next/link';
 import { getConversations } from '@/lib/store';
-import type { Conversation } from '@/lib/types';
+import type { SafeConversation } from '@/lib/types';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Bot, MessageSquarePlus, User } from 'lucide-react';
@@ -19,8 +19,6 @@ export const metadata: Metadata = {
   title: 'Muse1',
   description: 'A modern, contemporary, minimalist web app.',
 };
-
-type SafeConversation = Omit<Conversation, 'createdAt' | 'updatedAt'> & { createdAt: string; updatedAt: string };
 
 async function getSafeConversations(): Promise<SafeConversation[]> {
   const conversations = getConversations();

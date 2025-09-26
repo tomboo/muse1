@@ -1,10 +1,7 @@
 import { getConversation, getMessages } from '@/lib/store';
-import type { Message } from '@/lib/types';
+import type { SafeMessage } from '@/lib/types';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { notFound } from 'next/navigation';
-
-// This is a type used for serialization to the client.
-type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
 
 async function getSafeMessages(conversationId: string): Promise<SafeMessage[]> {
   const messages = getMessages(conversationId);
