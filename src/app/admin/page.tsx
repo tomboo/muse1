@@ -8,7 +8,12 @@ import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 
-async function getConversations(): Promise<Conversation[]> {
+// This is a type used for serialization to the client.
+type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
+type SafeConversation = Omit<Conversation, 'createdAt' | 'updatedAt'> & { createdAt: string; updatedAt: string };
+
+
+async function getConversations(): Promise<SafeConversation[]> {
   const conversationsRef = collection(db, 'conversations');
   const q = query(conversationsRef, orderBy('updatedAt', 'desc'));
   const querySnapshot = await getDocs(q);
@@ -16,14 +21,14 @@ async function getConversations(): Promise<Conversation[]> {
     const data = doc.data();
     return {
       id: doc.id,
-      ...data,
-      createdAt: data.createdAt.toDate(),
-      updatedAt: data.updatedAt.toDate(),
-    } as unknown as Conversation;
+      title: data.title,
+      createdAt: (data.createdAt.toDate() as Date).toISOString(),
+      updatedAt: (data.updatedAt.toDate() as Date).toISOString(),
+    };
   });
 }
 
-async function getMessages(conversationId: string): Promise<Message[]> {
+async function getMessages(conversationId: string): Promise<SafeMessage[]> {
   if (!conversationId) return [];
   const messagesRef = collection(db, 'conversations', conversationId, 'messages');
   const q = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -32,9 +37,10 @@ async function getMessages(conversationId: string): Promise<Message[]> {
      const data = doc.data();
      return {
       id: doc.id,
-      ...data,
-      timestamp: data.timestamp.toDate(),
-    } as unknown as Message;
+      role: data.role,
+      content: data.content,
+      timestamp: (data.timestamp.toDate() as Date).toISOString(),
+    };
   });
 }
 
@@ -67,7 +73,7 @@ export default async function AdminPage({ searchParams }: { searchParams: { conv
                   >
                     <p className="font-semibold truncate">{convo.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      Updated {formatDistanceToNow(new Date(convo.updatedAt as any), { addSuffix: true })}
+                      Updated {formatDistanceToNow(new Date(convo.updatedAt), { addSuffix: true })}
                     </p>
                   </Link>
                 ))}
@@ -93,7 +99,7 @@ export default async function AdminPage({ searchParams }: { searchParams: { conv
                           {message.role}
                         </Badge>
                         <p className="text-xs text-muted-foreground">
-                          {formatDistanceToNow(new Date(message.timestamp as any), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
                         </p>
                       </div>
                       <p className="text-sm whitespace-pre-wrap">{message.content}</p>

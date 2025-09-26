@@ -4,11 +4,22 @@ import type { Message, Conversation } from '@/lib/types';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { notFound } from 'next/navigation';
 
-async function getMessages(conversationId: string): Promise<Message[]> {
+// This is a type used for serialization to the client.
+type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
+
+async function getMessages(conversationId: string): Promise<SafeMessage[]> {
   const messagesRef = collection(db, 'conversations', conversationId, 'messages');
   const q = query(messagesRef, orderBy('timestamp', 'asc'));
   const querySnapshot = await getDocs(q);
-  const messages = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
+  const messages = querySnapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      role: data.role,
+      content: data.content,
+      timestamp: (data.timestamp.toDate() as Date).toISOString(),
+    };
+  });
   return messages;
 }
 
