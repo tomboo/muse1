@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Message } from '@/lib/types';
 
@@ -12,7 +12,7 @@ export async function addMessage(conversationId: string, prevState: any, formDat
     return { error: 'Message cannot be empty.' };
   }
 
-  const userMessage: Omit<Message, 'id' | 'timestamp' | 'timestamp'> = {
+  const userMessage: Omit<Message, 'id' | 'timestamp'> = {
     role: 'user',
     content: content.trim(),
   };
@@ -21,12 +21,12 @@ export async function addMessage(conversationId: string, prevState: any, formDat
     const messagesRef = collection(db, 'conversations', conversationId, 'messages');
     await addDoc(messagesRef, {
       ...userMessage,
-      timestamp: serverTimestamp(),
+      timestamp: new Date(),
     });
 
     const conversationRef = doc(db, 'conversations', conversationId);
     await updateDoc(conversationRef, {
-      updatedAt: serverTimestamp(),
+      updatedAt: new Date(),
     });
     
     revalidatePath(`/chat/${conversationId}`);

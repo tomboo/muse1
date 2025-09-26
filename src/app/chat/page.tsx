@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 // This is an Action, but as a Server Component it can run server-side code before rendering.
@@ -7,8 +7,8 @@ import { db } from '@/lib/firebase';
 export default async function NewChatPage() {
   const newConversation = {
     title: 'New Conversation',
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   try {
