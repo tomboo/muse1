@@ -9,7 +9,7 @@ import { ChatMessages } from './chat-messages';
 type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
 
 interface ChatInterfaceProps {
-  conversationId: string;
+  conversationId: string | null;
   initialMessages: SafeMessage[];
 }
 

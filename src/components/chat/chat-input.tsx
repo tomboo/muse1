@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { addMessage } from '@/app/chat/[id]/actions';
+import { sendMessage } from '@/app/chat/actions';
 import { useToast } from '@/hooks/use-toast';
 
 function SubmitButton() {
@@ -17,10 +17,10 @@ function SubmitButton() {
   );
 }
 
-export function ChatInput({ conversationId }: { conversationId: string }) {
+export function ChatInput({ conversationId }: { conversationId: string | null }) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [state, formAction] = useActionState(addMessage.bind(null, conversationId), null);
+  const [state, formAction] = useActionState(sendMessage.bind(null, conversationId), null);
   const { toast } = useToast();
 
   useEffect(() => {
