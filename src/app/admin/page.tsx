@@ -41,8 +41,11 @@ export default async function AdminPage({ searchParams }: { searchParams: { conv
 
   return (
     <div className="container mx-auto py-8 px-4 md:px-6">
-      <h1 className="text-3xl font-bold mb-6 font-headline">Admin Dashboard</h1>
-      <div className="grid lg:grid-cols-[300px_1fr] gap-6">
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold font-headline">Admin Dashboard</h1>
+        <p className="text-muted-foreground">View and manage user conversations.</p>
+      </div>
+      <div className="mt-6 grid lg:grid-cols-[300px_1fr] gap-6 items-start">
         <Card>
           <CardHeader>
             <CardTitle>Conversations</CardTitle>

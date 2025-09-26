@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bot } from 'lucide-react';
+import { Bot, MessageSquarePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Header() {
@@ -11,8 +11,8 @@ export function Header() {
           <span className="font-headline">Muse1</span>
         </Link>
         <nav className="flex items-center gap-4">
-          <Button asChild variant="ghost">
-            <Link href="/chat">New Chat</Link>
+           <Button asChild variant="ghost">
+            <Link href="/chat"><MessageSquarePlus/>New Chat</Link>
           </Button>
           <Button asChild variant="ghost">
             <Link href="/admin">Admin</Link>

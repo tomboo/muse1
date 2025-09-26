@@ -8,6 +8,7 @@ type SafeMessage = Omit<Message, 'timestamp'> & { timestamp: string };
 
 async function getSafeMessages(conversationId: string): Promise<SafeMessage[]> {
   const messages = getMessages(conversationId);
+  if (!messages) return [];
   return messages.map(message => ({
     ...message,
     timestamp: message.timestamp.toISOString(),
