@@ -25,6 +25,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogClose,
   DialogFooter,
 } from '@/components/ui/dialog';
@@ -114,6 +115,9 @@ export function ConversationActions({ conversation }: { conversation: Conversati
         }}>
           <DialogHeader>
             <DialogTitle>Rename Conversation</DialogTitle>
+            <DialogDescription>
+              Change the title of your conversation. Click rename when you're done.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
