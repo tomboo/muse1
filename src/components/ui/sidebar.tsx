@@ -6,7 +6,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import {
   Tooltip,
   TooltipContent,
@@ -184,7 +184,10 @@ const Sidebar = React.forwardRef<
               } as React.CSSProperties
             }
           >
-            <div className="flex h-full w-full flex-col">{children}</div>
+            <div className="flex h-full w-full flex-col">
+              <SheetTitle className="sr-only">Menu</SheetTitle>
+              {children}
+            </div>
           </SheetContent>
         </Sheet>
       )

@@ -49,6 +49,7 @@ export default async function RootLayout({
           <div className="flex flex-1">
             <Sidebar>
               <SidebarHeader>
+                 <h2 className="text-lg font-semibold md:hidden">Menu</h2>
                  <form action={startChat} className='w-full'>
                     <SidebarMenuButton type="submit" variant="ghost" className="w-full justify-start" tooltip="New Chat">
                       <MessageSquarePlus />
