@@ -158,7 +158,7 @@ export function ConversationActions({ conversation }: { conversation: Conversati
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently delete the conversation titled &quot;{conversation.title}&quot; and all of its messages. This action cannot be undone.
-            </DialogDescription>
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
