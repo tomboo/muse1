@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SidebarMenuItem } from '@/components/ui/sidebar';
+import { SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { ConversationActions } from '@/components/chat/conversation-actions';
 import type { Conversation } from '@/lib/types';
@@ -13,6 +13,13 @@ interface ConversationListProps {
 
 export function ConversationList({ conversations }: ConversationListProps) {
   const pathname = usePathname();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   return (
     <>
@@ -27,7 +34,7 @@ export function ConversationList({ conversations }: ConversationListProps) {
                 className="w-full justify-start flex-1 overflow-hidden"
                 data-active={isActive}
               >
-                <Link href={`/chat/${convo.id}`} className="truncate">
+                <Link href={`/chat/${convo.id}`} className="truncate" onClick={handleLinkClick}>
                   {convo.title}
                 </Link>
               </Button>
