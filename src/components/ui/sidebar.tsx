@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"
 
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
-const SIDEBAR_WIDTH_ICON = "3rem"
+const SIDEBAR_WIDTH_ICON = "3.5rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 type SidebarContext = {
@@ -197,7 +197,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         data-state={state}
-        className={cn("flex-col transition-all duration-300 ease-in-out md:flex", 
+        className={cn("hidden flex-col transition-all duration-300 ease-in-out md:flex", 
           state === 'collapsed' ? 'w-[var(--sidebar-width-icon)]' : 'w-[var(--sidebar-width)]',
           className)}
         {...props}
@@ -223,7 +223,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7", className)}
+      className={cn("h-8 w-8", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
@@ -316,7 +316,7 @@ const SidebarMenuItem = React.forwardRef<
       ref={ref}
       data-sidebar="menu-item"
       className={cn("group/menu-item relative", 
-        state === 'collapsed' ? 'w-8' : '',
+        state === 'collapsed' ? 'w-10' : '',
         className)}
       {...props}
     />
@@ -380,7 +380,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), state === 'collapsed' ? 'w-8 justify-center' : '', className)}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), state === 'collapsed' ? 'w-10 justify-center' : '', className)}
         {...props}
       >
         {buttonContent}

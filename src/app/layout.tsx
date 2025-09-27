@@ -7,7 +7,7 @@ import { getConversations } from '@/lib/store';
 import type { SafeConversation } from '@/lib/types';
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter, SidebarMenuButton } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageSquarePlus, User, PanelLeft } from 'lucide-react';
+import { Bot, MessageSquarePlus, User } from 'lucide-react';
 import { ConversationList } from '@/components/chat/conversation-list';
 import { Suspense } from 'react';
 import { ClearConversations } from '@/components/chat/clear-conversations';
@@ -96,15 +96,12 @@ export default async function RootLayout({
               <header className="border-b bg-card">
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
                   <div className="flex items-center gap-2">
-                    <SidebarTrigger className="md:hidden" />
+                    <SidebarTrigger />
                     <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
                       <Bot className="h-6 w-6" />
                       <span className="font-headline">{config.appName}</span>
                     </Link>
                   </div>
-                  <Button variant="ghost" size="icon">
-                    <PanelLeft/>
-                  </Button>
                 </div>
               </header>
               <main className="flex-1 flex flex-col">{children}</main>
