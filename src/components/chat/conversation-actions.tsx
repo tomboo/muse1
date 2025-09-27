@@ -35,11 +35,13 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { renameConversation, deleteConversation } from '@/app/conversations/actions';
 import type { Conversation } from '@/lib/types';
+import { useSidebar } from '../ui/sidebar';
 
 
 export function ConversationActions({ conversation }: { conversation: Conversation }) {
   const { toast } = useToast();
   const pathname = usePathname();
+  const { state } = useSidebar();
   const [isRenamePending, startRenameTransition] = useTransition();
   const [isDeletePending, startDeleteTransition] = useTransition();
 
@@ -86,6 +88,10 @@ export function ConversationActions({ conversation }: { conversation: Conversati
       }
     });
   };
+  
+  if (state === 'collapsed') {
+    return null;
+  }
 
   return (
     <>
@@ -152,7 +158,7 @@ export function ConversationActions({ conversation }: { conversation: Conversati
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently delete the conversation titled &quot;{conversation.title}&quot; and all of its messages. This action cannot be undone.
-            </AlertDialogDescription>
+            </DialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>

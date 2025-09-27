@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import Link from 'next/link';
 import { getConversations } from '@/lib/store';
 import type { SafeConversation } from '@/lib/types';
-import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
+import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter, SidebarMenuButton } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Bot, MessageSquarePlus, User } from 'lucide-react';
+import { Bot, MessageSquarePlus, User, PanelLeft } from 'lucide-react';
 import { ConversationList } from '@/components/chat/conversation-list';
 import { Suspense } from 'react';
 import { ClearConversations } from '@/components/chat/clear-conversations';
@@ -47,14 +47,14 @@ export default async function RootLayout({
       <body className={cn("font-body antialiased min-h-screen bg-background text-foreground flex flex-col")}>
         <SidebarProvider>
           <div className="flex flex-1">
-            <Sidebar className="md:flex flex-col hidden">
+            <Sidebar>
               <SidebarHeader>
-                <form action={startChat} className='w-full'>
-                  <Button type="submit" variant="ghost" className="w-full justify-start">
-                    <MessageSquarePlus />
-                    <span>New Chat</span>
-                  </Button>
-                </form>
+                 <form action={startChat} className='w-full'>
+                    <SidebarMenuButton type="submit" variant="ghost" className="w-full justify-start" tooltip="New Chat">
+                      <MessageSquarePlus />
+                      <span>New Chat</span>
+                    </SidebarMenuButton>
+                 </form>
               </SidebarHeader>
               <SidebarContent className="p-2">
                 <SidebarMenu>
@@ -69,34 +69,41 @@ export default async function RootLayout({
                     <ClearConversations />
                   </SidebarMenuItem>
                    <SidebarMenuItem>
-                     <Button asChild variant="ghost" className="w-full justify-start">
+                     <SidebarMenuButton asChild variant="ghost" className="w-full justify-start" tooltip="Admin">
                         <Link href="/admin">
                           <User />
                           <span>Admin</span>
                         </Link>
-                     </Button>
+                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <div className="flex items-center gap-3 px-2 py-1">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback>
-                          <User />
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm font-medium">User</span>
-                    </div>
+                     <SidebarMenuButton asChild variant="ghost" className="w-full justify-start" tooltip="User Profile">
+                        <div className="flex items-center gap-3">
+                           <Avatar className="h-8 w-8">
+                              <AvatarFallback>
+                                 <User />
+                              </AvatarFallback>
+                           </Avatar>
+                           <span className="text-sm font-medium">User</span>
+                        </div>
+                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarFooter>
             </Sidebar>
             <div className="flex flex-col flex-1">
-              <header className="border-b bg-card md:hidden">
+              <header className="border-b bg-card">
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-                  <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
-                    <Bot className="h-6 w-6" />
-                    <span className="font-headline">{config.appName}</span>
-                  </Link>
-                  <SidebarTrigger />
+                  <div className="flex items-center gap-2">
+                    <SidebarTrigger className="md:hidden" />
+                    <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
+                      <Bot className="h-6 w-6" />
+                      <span className="font-headline">{config.appName}</span>
+                    </Link>
+                  </div>
+                  <Button variant="ghost" size="icon">
+                    <PanelLeft/>
+                  </Button>
                 </div>
               </header>
               <main className="flex-1 flex flex-col">{children}</main>

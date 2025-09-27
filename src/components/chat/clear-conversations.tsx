@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { clearAllConversations } from '@/app/conversations/actions';
+import { SidebarMenuButton } from '../ui/sidebar';
 
 export function ClearConversations() {
   const { toast } = useToast();
@@ -43,14 +44,15 @@ export function ClearConversations() {
 
   return (
     <>
-      <Button
+      <SidebarMenuButton
         onClick={() => setIsDeleteDialogOpen(true)}
         variant="ghost"
         className="w-full justify-start text-destructive hover:text-destructive"
+        tooltip="Clear all chats"
       >
         <Trash2 />
         <span>Clear all chats</span>
-      </Button>
+      </SidebarMenuButton>
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
