@@ -6,7 +6,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
 import {
   Tooltip,
   TooltipContent,
@@ -105,11 +105,13 @@ const SidebarProvider = React.forwardRef<
     }, [toggleSidebar])
 
     React.useEffect(() => {
-        const checkIsMobile = () => setIsMobile(window.innerWidth < 768)
-        checkIsMobile()
-        window.addEventListener('resize', checkIsMobile)
-        return () => window.removeEventListener('resize', checkIsMobile)
-    }, [])
+      if (typeof window === 'undefined') return;
+
+      const checkIsMobile = () => setIsMobile(window.innerWidth < 768);
+      checkIsMobile();
+      window.addEventListener('resize', checkIsMobile);
+      return () => window.removeEventListener('resize', checkIsMobile);
+    }, []);
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
@@ -185,7 +187,6 @@ const Sidebar = React.forwardRef<
             }
           >
             <div className="flex h-full w-full flex-col">
-              <SheetTitle className="sr-only">Menu</SheetTitle>
               {children}
             </div>
           </SheetContent>
