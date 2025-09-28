@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { Conversation } from '@/lib/types';
 import { Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter, SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
 import { Bot, MessageSquarePlus, User } from 'lucide-react';
@@ -15,6 +16,7 @@ import { getConversations as getConversationsFromStore } from '@/lib/store';
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const { isMobile, setOpenMobile } = useSidebar();
+  const router = useRouter();
 
   useEffect(() => {
     // Function to load conversations from the store.
@@ -48,7 +50,8 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
   };
 
   const handleNewChat = async () => {
-    await startChat();
+    const { id } = await startChat();
+    router.push(`/chat/${id}`);
     if (isMobile) {
       setOpenMobile(false);
     }

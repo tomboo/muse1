@@ -1,14 +1,14 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { deleteConversation as deleteConversationFromStore, renameConversation as renameConversationInStore, clearAllConversations as clearAllConversationsFromStore, createConversation } from '@/lib/store';
 
-export async function startChat() {
+export async function startChat(): Promise<{ id: string }> {
   const newConversation = createConversation();
   revalidatePath('/');
-  redirect(`/chat/${newConversation.id}`);
+  revalidatePath('/admin');
+  return { id: newConversation.id };
 }
 
 export async function renameConversation(conversationId: string, newTitle: string) {
