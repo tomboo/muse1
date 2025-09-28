@@ -28,8 +28,8 @@ export async function startNewConversation(formData: FormData) {
     addMessageToStore(newConversation.id, assistantResponse, 'assistant');
     
     // 4. Revalidate paths to update UI for all users
-    revalidatePath('/admin');
     revalidatePath('/');
+    revalidatePath('/admin');
     
     // 5. Return the new ID for client-side navigation
     return { success: true, newConversationId: newConversation.id };
@@ -60,6 +60,7 @@ export async function sendMessage(conversationId: string, formData: FormData) {
     // Add user message
     addMessageToStore(conversationId, content.trim(), 'user');
     revalidatePath(`/chat/${conversationId}`);
+    revalidatePath('/');
     revalidatePath('/admin');
     
     // Get assistant response
@@ -68,6 +69,7 @@ export async function sendMessage(conversationId: string, formData: FormData) {
 
     // Revalidate paths again to show assistant message
     revalidatePath(`/chat/${conversationId}`);
+    revalidatePath('/');
     revalidatePath('/admin');
     
     return { success: true };
