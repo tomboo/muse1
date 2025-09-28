@@ -12,11 +12,6 @@ import { startChat } from '@/app/conversations/actions';
 import { config } from '@/lib/config';
 import { getConversations as getConversationsFromStore } from '@/lib/store';
 
-// This function needs to exist outside the component to be callable from the new `useConversations` hook effect.
-function getSafeConversations(): Conversation[] {
-  return getConversationsFromStore();
-}
-
 // Custom hook to fetch conversations on the client
 function useConversations() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -25,7 +20,7 @@ function useConversations() {
     // We fetch conversations on the client.
     // This part of the component is not SSR'd, so this is safe.
     function loadConversations() {
-      const convos = getSafeConversations();
+      const convos = getConversationsFromStore();
       setConversations(convos);
     }
     loadConversations();
