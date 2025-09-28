@@ -12,41 +12,34 @@ import { startChat } from '@/app/conversations/actions';
 import { config } from '@/lib/config';
 import { getConversations as getConversationsFromStore } from '@/lib/store';
 
-// Custom hook to fetch conversations on the client
-function useConversations() {
+export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const { isMobile, setOpenMobile } = useSidebar();
 
   useEffect(() => {
-    // We fetch conversations on the client.
-    // This part of the component is not SSR'd, so this is safe.
-    function loadConversations() {
+    // Function to load conversations from the store.
+    const loadConversations = () => {
       const convos = getConversationsFromStore();
       setConversations(convos);
-    }
+    };
+
+    // Load them on initial mount.
     loadConversations();
-    
-    // This is a simple event listener to re-fetch conversations when they change.
-    // In a real-world app, you might use a more robust state management solution
-    // like Zustand or Redux, or React Query for server state.
+
+    // Set up an event listener to re-fetch conversations when they change.
+    // This is a simple mechanism for this starter; a more robust app might use
+    // a state management library like Zustand or React Query.
     const handleStorageChange = () => {
       loadConversations();
     };
-    
+
     window.addEventListener('storage-change', handleStorageChange);
 
+    // Clean up the event listener on component unmount.
     return () => {
-       window.removeEventListener('storage-change', handleStorageChange);
-    }
-
+      window.removeEventListener('storage-change', handleStorageChange);
+    };
   }, []);
-
-  return conversations;
-}
-
-
-export function ClientLayout({ children }: { children: React.ReactNode }) {
-  const conversations = useConversations();
-  const { isMobile, setOpenMobile } = useSidebar();
 
   const handleLinkClick = () => {
     if (isMobile) {
@@ -55,8 +48,6 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
   };
 
   const handleNewChat = async () => {
-    // We can't use a form action here directly because it causes a full page reload
-    // which we want to avoid for a smoother UX.
     await startChat();
     if (isMobile) {
       setOpenMobile(false);
