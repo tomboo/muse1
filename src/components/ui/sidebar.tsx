@@ -6,7 +6,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import {
   Tooltip,
   TooltipContent,
@@ -190,7 +190,11 @@ const Sidebar = React.forwardRef<
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
               } as React.CSSProperties
             }
+            aria-describedby={undefined}
           >
+             <SheetHeader>
+              <SheetTitle className="sr-only">Menu</SheetTitle>
+            </SheetHeader>
             <div className="flex h-full w-full flex-col">
               {children}
             </div>
@@ -428,5 +432,7 @@ export {
   SidebarTrigger,
   useSidebar,
 }
+
+    
 
     
