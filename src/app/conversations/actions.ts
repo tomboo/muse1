@@ -7,6 +7,7 @@ import { deleteConversation as deleteConversationFromStore, renameConversation a
 
 export async function startChat() {
   const newConversation = createConversation();
+  revalidatePath('/');
   redirect(`/chat/${newConversation.id}`);
 }
 
