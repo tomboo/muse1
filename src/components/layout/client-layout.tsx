@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { Conversation, SafeConversation } from '@/lib/types';
+import type { Conversation } from '@/lib/types';
 import { Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter, SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
 import { Bot, MessageSquarePlus, User } from 'lucide-react';
 import { ConversationList } from '@/components/chat/conversation-list';
