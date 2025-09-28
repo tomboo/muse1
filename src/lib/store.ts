@@ -7,8 +7,21 @@ import { config } from './config';
 declare global {
   var __conversations: Conversation[] | undefined;
   var __messages: { [conversationId: string]: Message[] } | undefined;
-  var __idCounter: number | undefined;
 }
+
+// Runtime-safe id generator (works in Node, Edge, and browser)
+function generateId() {
+  try {
+    // @ts-ignore - crypto exists in Edge/modern Node/browsers
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      // @ts-ignore
+      return crypto.randomUUID();
+    }
+  } catch {}
+  // Fallback (not cryptographically strong, but fine for route ids)
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
 
 if (global.__conversations === undefined) {
   const initialConversations: Conversation[] = [];
@@ -16,9 +29,6 @@ if (global.__conversations === undefined) {
 }
 if (global.__messages === undefined) {
   global.__messages = {};
-}
-if (global.__idCounter === undefined) {
-  global.__idCounter = global.__conversations.length;
 }
 
 
@@ -29,11 +39,6 @@ function dispatchStorageEvent() {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('storage-change'));
   }
-}
-
-function generateId(): string {
-  global.__idCounter!++;
-  return global.__idCounter.toString();
 }
 
 export function getConversations(): Conversation[] {

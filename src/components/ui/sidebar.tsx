@@ -105,6 +105,10 @@ const SidebarProvider = React.forwardRef<
     }, [toggleSidebar])
 
     React.useEffect(() => {
+       // This effect should only run on the client side.
+      if (typeof window === 'undefined') {
+        return;
+      }
       const checkIsMobile = () => setIsMobile(window.innerWidth < 768);
       
       // Initial check on mount
