@@ -35,7 +35,7 @@ export function ConversationList({ conversations }: ConversationListProps) {
                 data-active={isActive}
               >
                 <Link href={`/chat/${convo.id}`} className="truncate" onClick={handleLinkClick}>
-                  {convo.title}
+                  {convo.title?.trim() || 'Untitled'}
                 </Link>
               </Button>
               <ConversationActions conversation={convo} />

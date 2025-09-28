@@ -116,9 +116,9 @@ export function addMessage(conversationId: string, content: string, role: 'user'
   messages[conversationId].push(newMessage);
 
   // Update the conversation's updatedAt timestamp
-  const firstMessage = messages[conversationId].length === 1;
+  const isFirstMessage = messages[conversationId].length === 1;
   // If it's the first message and it's from the user, update the title based on the content
-  if (firstMessage && role === 'user' && content.length > 5) {
+  if (isFirstMessage && role === 'user' && content.length > 5) {
      const newTitle = content.substring(0, 30);
      conversation.title = newTitle.length < 30 ? newTitle : `${newTitle}...`;
   }
