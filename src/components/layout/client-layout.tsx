@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { SafeConversation } from '@/lib/types';
+import type { Conversation, SafeConversation } from '@/lib/types';
 import { Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarFooter, SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
 import { Bot, MessageSquarePlus, User } from 'lucide-react';
 import { ConversationList } from '@/components/chat/conversation-list';
@@ -13,24 +13,19 @@ import { config } from '@/lib/config';
 import { getConversations as getConversationsFromStore } from '@/lib/store';
 
 // This function needs to exist outside the component to be callable from the new `useConversations` hook effect.
-async function getSafeConversations(): Promise<SafeConversation[]> {
-  const conversations = getConversationsFromStore();
-  return conversations.map(convo => ({
-    ...convo,
-    createdAt: convo.createdAt.toISOString(),
-    updatedAt: convo.updatedAt.toISOString(),
-  }));
+function getSafeConversations(): Conversation[] {
+  return getConversationsFromStore();
 }
 
 // Custom hook to fetch conversations on the client
 function useConversations() {
-  const [conversations, setConversations] = useState<SafeConversation[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
 
   useEffect(() => {
     // We fetch conversations on the client.
     // This part of the component is not SSR'd, so this is safe.
-    async function loadConversations() {
-      const convos = await getSafeConversations();
+    function loadConversations() {
+      const convos = getSafeConversations();
       setConversations(convos);
     }
     loadConversations();

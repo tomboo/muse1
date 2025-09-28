@@ -25,6 +25,11 @@ if (global.__idCounter === undefined) {
 const conversations: Conversation[] = global.__conversations;
 const messages: { [conversationId: string]: Message[] } = global.__messages;
 
+function dispatchStorageEvent() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('storage-change'));
+  }
+}
 
 function generateId(): string {
   global.__idCounter!++;
@@ -54,6 +59,7 @@ export function createConversation(title?: string): Conversation {
   };
   conversations.push(newConversation);
   messages[newConversation.id] = [];
+  dispatchStorageEvent();
   return newConversation;
 }
 
@@ -62,6 +68,7 @@ export function renameConversation(id: string, newTitle: string): Conversation |
   if (conversation) {
     conversation.title = newTitle;
     conversation.updatedAt = new Date();
+    dispatchStorageEvent();
     return conversation;
   }
   return undefined;
@@ -72,6 +79,7 @@ export function deleteConversation(id: string): boolean {
   if (index !== -1) {
     conversations.splice(index, 1);
     delete messages[id];
+    dispatchStorageEvent();
     return true;
   }
   return false;
@@ -82,6 +90,7 @@ export function clearAllConversations(): void {
   for (const key in messages) {
     delete messages[key];
   }
+  dispatchStorageEvent();
 }
 
 export function getMessages(conversationId: string): Message[] {
@@ -108,12 +117,12 @@ export function addMessage(conversationId: string, content: string, role: 'user'
 
   // Update the conversation's updatedAt timestamp
   const firstMessage = messages[conversationId].length === 1;
-  // If it's the first message, update the title based on the content
-  if (firstMessage && role === 'user') {
-    const newTitle = content.substring(0, 30);
-    conversation.title = newTitle.length < 30 ? newTitle : `${newTitle}...`;
+  // If it's the first message and it's from the user, update the title based on the content
+  if (firstMessage && role === 'user' && content.length > 5) {
+     const newTitle = content.substring(0, 30);
+     conversation.title = newTitle.length < 30 ? newTitle : `${newTitle}...`;
   }
   conversation.updatedAt = new Date();
-
+  dispatchStorageEvent();
   return newMessage;
 }
