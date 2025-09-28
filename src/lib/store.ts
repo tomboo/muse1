@@ -116,9 +116,9 @@ export function addMessage(conversationId: string, content: string, role: 'user'
   messages[conversationId].push(newMessage);
 
   // Update the conversation's updatedAt timestamp
-  const isFirstMessage = messages[conversationId].length === 1;
-  // If it's the first message and it's from the user, update the title based on the content
-  if (isFirstMessage && role === 'user' && content.length > 5) {
+  const isFirstMessage = messages[conversationId].filter(m => m.role === 'user').length === 1;
+  // If it's the first user message and the title is still the default, update the title.
+  if (isFirstMessage && role === 'user' && conversation.title.startsWith(config.newChatName)) {
      const newTitle = content.substring(0, 30);
      conversation.title = newTitle.length < 30 ? newTitle : `${newTitle}...`;
   }
