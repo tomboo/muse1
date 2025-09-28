@@ -105,10 +105,11 @@ const SidebarProvider = React.forwardRef<
     }, [toggleSidebar])
 
     React.useEffect(() => {
-      if (typeof window === 'undefined') return;
-
       const checkIsMobile = () => setIsMobile(window.innerWidth < 768);
+      
+      // Initial check on mount
       checkIsMobile();
+
       window.addEventListener('resize', checkIsMobile);
       return () => window.removeEventListener('resize', checkIsMobile);
     }, []);
@@ -423,3 +424,5 @@ export {
   SidebarTrigger,
   useSidebar,
 }
+
+    
