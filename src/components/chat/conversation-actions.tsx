@@ -122,7 +122,7 @@ export function ConversationActions({ conversation }: { conversation: Conversati
           <DialogHeader>
             <DialogTitle>Rename Conversation</DialogTitle>
             <DialogDescription>
-              Change the title of your conversation. Click rename when you're done.
+              Enter a new title for your conversation below. Click rename when you're done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

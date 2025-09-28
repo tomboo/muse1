@@ -59,7 +59,7 @@ export function ClearConversations() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete all conversations and their messages. This action cannot be undone.
+              This action will permanently delete all conversation history. This cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
